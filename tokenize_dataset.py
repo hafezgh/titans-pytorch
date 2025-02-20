@@ -1,6 +1,8 @@
 from datasets import load_dataset
 from transformers import AutoTokenizer
-
+import os
+os.environ["TMPDIR"] = "/scratch/users/hafezgh/fineweb-10B-tokenized"
+os.environ["HF_DATASETS_CACHE"] = "/scratch/users/hafezgh/fineweb-10B-tokenized"
 # ----------------------------------------------------------------
 # 1. Load the Llama-2 tokenizer
 #    (We use Llama-2's vocab, but train a model from scratch.)
@@ -65,7 +67,7 @@ raw_dataset = load_dataset(
 processed_dataset = raw_dataset.map(
     tokenize_and_concatenate,
     batched=True,
-    num_proc=4,  # Enable multiprocessing for speedup
+    num_proc=8,  # Enable multiprocessing for speedup
     remove_columns=raw_dataset.column_names,
     load_from_cache_file=False,  # Avoid cache issues
     desc="Tokenizing and chunking the dataset"
